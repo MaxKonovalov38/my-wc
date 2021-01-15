@@ -1,0 +1,9 @@
+[package]
+name = "my_wc"
+version = "0.1.0"
+authors = ["MaxKonovalov38 <max.kon.38r@gmail.com>"]
+edition = "2018"
+description = "A simple implementation of the unix utility - WC"
+homepage = "https://maxkonovalov38.github.io"
+
+[dependencies]
