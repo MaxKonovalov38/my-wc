@@ -1,6 +1,7 @@
-use std::io::{BufRead, BufReader};
+use std::fs;
 
 mod lib;
+mod params;
 
 fn help_out() {
 	// Полная справка о программе
@@ -20,20 +21,23 @@ fn version_out() {
 
 fn title_out() {
 	// Краткое пояснение работы
-	println!("EXAMPLE:\n\tcargo run [--] [param] [arg] ...");
-	println!("\nPARAMETERS:\n\t'-l'  Количество строк\n\t'-c'  Количество байт\n\t'-m'  Количество символов\n\t'-L'  Количество символов в самой длинной строке\n\t'-w'  Количество слов");
+	println!("EXAMPLE:\n\tcargo run -- [param] [file] ...");
+	println!("\nPARAMETERS:\n\t'-v, --version'  Версия программы\n\t'-h, --help'  Документация программы");
+	println!("\t'-l'  Количество строк\n\t'-c'  Количество байт\n\t'-m'  Количество символов\n\t'-L'  Количество символов в самой длинной строке\n\t'-w'  Количество слов");
 }
 
 fn long_out(_par: &str, _file: &str) {
 	// Выполнение с доп. параметрами
-	println!("Parametr: {}, File: {}", _par, _file);
+
+	// Пока не пойму почему mut!!!
+	let mut mod_file = lib::open_file(_file);
 
 	match _par {
-		"-l" => lib::param_l(_file),
-		"-c" => lib::param_c(_file),
-		"-m" => lib::param_m(_file),
-		"-L" => lib::param_bl(_file),
-		"-w" => lib::param_w(_file),
+//		"-l" => params::param_l(mod_file),
+		"-c" => println!("{}   {}", params::param_c(&mut mod_file), _file),
+//		"-m" => params::param_m(mod_file),
+//		"-L" => params::param_bl(mod_file),
+//		"-w" => params::param_w(mod_file),
 		_ => println!("[ ERROR ] Could not verification getting parameter"),
 	}
 }
@@ -45,25 +49,24 @@ fn simple_out(_file_name: &str) {
 	} else if _file_name == "-v" || _file_name == "--version" {
 		version_out();
 	} else {
-		println!("[ INFO ] Starting calc!");
+		// Переменные для вывода инфы
+		let mut sum_l = 0;
+		let mut sum_w = 0;
+		//let mut sum_m = 0;
 
-		let mod_file = lib::open_file(_file_name);
+		let contents = fs::read_to_string(_file_name)
+			.expect("Something went wrong reading the file");
 
-		// переменная содержит полное содержимое file
-		let reader = BufReader::new(mod_file);
-
-		let mut sum_chars = 0;
-		let mut sum_lines = 0;
-
-		//
-		for line in reader.lines() {
-			let line_cont = line.unwrap();
-
-			sum_chars += line_cont.len();
-			sum_lines += 1;
+		for line in contents.lines() {
+			sum_l += 1;
+			sum_w += line.len();
 		}
+		if sum_l < 6 {
+			sum_l -= 1;
+		}
+		sum_w += sum_l;
 
-		println!(" {}\tlen strings\t{}\t{}", sum_lines, sum_chars, _file_name);
+		println!("Whith text:\n{}\n{} {}", contents, sum_l, sum_w);
 	}
 }
 
