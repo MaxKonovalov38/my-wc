@@ -52,21 +52,24 @@ fn simple_out(_file_name: &str) {
 		// Переменные для вывода инфы
 		let mut sum_l = 0;
 		let mut sum_w = 0;
-		//let mut sum_m = 0;
+		let mut sum_m = 0;
 
 		let contents = fs::read_to_string(_file_name)
 			.expect("Something went wrong reading the file");
 
 		for line in contents.lines() {
 			sum_l += 1;
-			sum_w += line.len();
+			sum_m += line.len();
 		}
 		if sum_l < 6 {
 			sum_l -= 1;
 		}
-		sum_w += sum_l;
+		sum_m += sum_l;
+		for _ in contents.split_whitespace() {
+			sum_w += 1;
+		}
 
-		println!("Whith text:\n{}\n{} {}", contents, sum_l, sum_w);
+		println!(" {} {} {} {}", sum_l, sum_w, sum_m, _file_name);
 	}
 }
 
