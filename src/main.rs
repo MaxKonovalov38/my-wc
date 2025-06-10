@@ -1,89 +1,74 @@
-use std::fs;
+use std::env;
+use std::fs::{File, self};
+use std::process;
 
-mod lib;
-mod params;
+mod calling_help;
+mod calling_version;
 
-fn help_out() {
-	// Полная справка о программе
-	let mut text_hp = String::from(env!("CARGO_PKG_NAME"));
-	text_hp.push_str(" (v");
-	text_hp.push_str(env!("CARGO_PKG_VERSION"));
-	text_hp.push_str("), ");
-	text_hp.push_str(env!("CARGO_PKG_DESCRIPTION"));
-	println!("{}\n", text_hp);
-	title_out();
+/// Выполнение программы
+fn working_a_file(file_name: &str) {
+    // Переменные для вывода информации
+    let mut sum_l = 0;    // количество строк
+    let mut sum_w = 0;    // количество слов
+    let mut sum_m = 0;    // количество символов
+
+    let contents = fs::read_to_string(file_name)
+        .expect("[ERROR] -- Что-то пошло не так при чтении файла");
+
+    for line in contents.lines() {
+        sum_l += 1;
+        sum_m += line.len();
+    }
+    sum_l -= 1;
+    sum_m += sum_l;
+
+    for _ in contents.split_whitespace() {
+        sum_w += 1;
+    }
+
+    println!(" {} {} {}   {}", sum_l, sum_w, sum_m, file_name);
 }
 
-fn version_out() {
-	let version = String::from(env!("CARGO_PKG_VERSION"));
-	println!("Version program my-wc: v{}", version);
+fn file_verification(file_name: &str) -> File {
+    let file_result = File::open(file_name);
+
+    let file = match file_result {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!("[ERROR] -- Ошибка открытия файла: {}", e);
+            process::exit(1);
+        }
+    };
+
+    file
 }
 
-fn title_out() {
-	// Краткое пояснение работы
-	println!("EXAMPLE:\n\tcargo run -- [param] [file] ...");
-	println!("\nPARAMETERS:\n\t'-v, --version'  Версия программы\n\t'-h, --help'  Документация программы");
-	println!("\t'-l'  Количество строк\n\t'-c'  Количество байт\n\t'-m'  Количество символов\n\t'-L'  Количество символов в самой длинной строке\n\t'-w'  Количество слов");
-}
-
-fn long_out(_par: &str, _file: &str) {
-	// Выполнение с доп. параметрами
-
-	// Пока не пойму почему mut!!!
-	let mut mod_file = lib::open_file(_file);
-
-	match _par {
-//		"-l" => params::param_l(mod_file),
-		"-c" => println!("{}   {}", params::param_c(&mut mod_file), _file),
-//		"-m" => params::param_m(mod_file),
-//		"-L" => params::param_bl(mod_file),
-//		"-w" => params::param_w(mod_file),
-		_ => println!("[ ERROR ] Could not verification getting parameter"),
-	}
-}
-
-fn simple_out(_file_name: &str) {
-	// Стандартное выполнение
-	if _file_name == "-h" || _file_name == "--help" {
-		help_out();
-	} else if _file_name == "-v" || _file_name == "--version" {
-		version_out();
-	} else {
-		// Переменные для вывода инфы
-		let mut sum_l = 0;
-		let mut sum_w = 0;
-		let mut sum_m = 0;
-
-		let contents = fs::read_to_string(_file_name)
-			.expect("Something went wrong reading the file");
-
-		for line in contents.lines() {
-			sum_l += 1;
-			sum_m += line.len();
-		}
-		if sum_l < 6 {
-			sum_l -= 1;
-		}
-		sum_m += sum_l;
-		for _ in contents.split_whitespace() {
-			sum_w += 1;
-		}
-
-		println!(" {} {} {} {}", sum_l, sum_w, sum_m, _file_name);
-	}
+fn single_argument_processing(param: &str) {
+    match param {
+        "-h" => calling_help::help_out(),
+        "-v" => calling_version::version_out(),
+        _ => {
+            println!("param == {}", param);
+            file_verification(param);
+            working_a_file(param);
+        }
+    }
 }
 
 fn main() {
-	// Принимаем аргументы CL
-	let args: Vec<String> = std::env::args().collect();
+    let args: Vec<String> = env::args()
+        .skip(1)
+        .collect();
 
-	// Анализ аргументов
-	match args.len() {
-		3 => long_out(&args[1], &args[2]),
-		2 => simple_out(&args[1]),
-		_ => {
-				println!("[ ERROR ] Invalid invocation (you done goofes!)");
-				title_out();
-		}
-	}
+    match args.len() {
+        2 => println!("args == 2"),
+        1 => {
+            println!("args == 1");
+            single_argument_processing(&args[0]);
+        }
+        _ => {
+            println!("args == 0");
+            calling_help::title_out();
+        }
+    }
 }
