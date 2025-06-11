@@ -3,7 +3,7 @@ name = "my_wc"
 description = "A simple implementation of the unix utility - WC"
 homepage = "https://maxkonovalov38.github.io"
 
-version = "0.1.0"
+version = "0.2.0"
 authors = ["MaxKonovalov38 <max.kon.38r@gmail.com>"]
 edition = "2021"
 
