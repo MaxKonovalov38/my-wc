@@ -1,80 +1,82 @@
 # my-wc
 
-A Rust implementation of the Unix `wc` (word count) command line utility.
+Rust-реализация утилиты командной строки Unix `wc` (подсчет слов).
 
-## Description
+## Описание
 
-This program counts the number of lines, words, bytes, and characters in text files. It provides similar functionality to the standard Unix `wc` command with a modern Rust implementation.
+Эта программа подсчитывает количество строк, слов, байт и символов в текстовых файлах. Она предоставляет функциональность, аналогичную стандартной команде Unix "wc", в современной реализации Rust.
 
-## Features
+## Особенности
 
-- Count lines (`-l`)
-- Count bytes (`-c`)
-- Count characters (`-m`)
-- Count words (`-w`)
-- Find the length of the longest line (`-L`)
-- Process multiple files
-- Simple and efficient implementation
+- Подситывать строки (`-l`)
+- Подсчитывать байты (`-c`)
+- Подсчитывать символы (`-m`)
+- Подсчитывать слова (`-w`)
+- Находить длину самой длинной строки (`-L`)
+- Обрабатывать несколько файлов
+- Простое и эффективное внедрение
 
-## Installation
+## Установка
 
-1. Make sure you have Rust installed on your system. If not, install it from [rustup.rs](https://rustup.rs)
-2. Clone this repository
-3. Build the project:
+1. Убедитесь, что в вашей системе установлен Rust. Если нет, установите его из [rustup.rs](https://rustup.rs)
+2. Клонируйте этот репозиторий
+3. Сборка проекта:
 ```bash
 cargo build --release
 ```
 
-## Usage
+## Использование
 
-Basic usage:
+Стандартное использование:
 ```bash
-cargo run -- [options] [file]
+cargo run -- [options]
+
+cargo run -- [file]
 ```
 
-### Options
+### Опции
 
-- `-l`: Count lines
-- `-c`: Count bytes
-- `-m`: Count characters
-- `-w`: Count words
-- `-L`: Count characters in the longest line
-- `-h, --help`: Show help message
-- `-v, --version`: Show version information
+- `-l`: Подсчет строк
+- `-c`: Подсчет байт
+- `-m`: Подсчет символов
+- `-w`: Подсчет слов
+- `-L`: Подсчет символов в самой длинной строке
+- `-h, --help`: Отображение справочного сообщения
+- `-v, --version`: Отображать информацию о версии
 
-### Examples
+### Примеры
 
-Count lines in a file:
+Подсчитывать количество строк в файле:
 ```bash
 cargo run -- -l file.txt
 ```
 
-Count words in a file:
+Подсчитывайте слова в файле:
 ```bash
 cargo run -- -w file.txt
 ```
 
-Get all statistics for a file:
+Получить всю статистику по файлу:
 ```bash
 cargo run -- file.txt
 ```
 
-## Building
+## Сборка
 
-To build the project:
+Сбрка проекта:
 ```bash
 cargo build
 ```
 
-For release build:
+Сборка релиза:
 ```bash
 cargo build --release
 ```
 
-## License
+## Лицензия
 
-[Add your license information here]
+GNU GENERAL PUBLIC LICENSE -- Version 3, 29 June 2007
 
-## Contributing
+## Автор
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+[MaxKonovalov38](https://github.com/MaxKonovalov38/my-wc) 
